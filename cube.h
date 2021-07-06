@@ -1,0 +1,1 @@
+void initRenderer(int argc, char **argv, int width, int height);
