@@ -40,11 +40,30 @@ drawBox(void)
   }
 }
 
+int timeSinceStart = 0;
+
 void
 display(void)
 {
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+  glMatrixMode(GL_PROJECTION);
+  glLoadIdentity();
+  gluPerspective( /* field of view in degree */ 40.0,
+    /* aspect ratio */ 1.67f,
+    /* Z near */ 1.0, /* Z far */ 40.0);
+
+  glMatrixMode(GL_MODELVIEW);
+  glLoadIdentity();
+  gluLookAt(0.0, 0.0, 30.0,
+    0.0, 0.0, 0.0,
+    0.0, 1.0, 0.);
+
+  glRotatef(90, 1.0, 0.0, 0.0);
+  glTranslatef((float)timeSinceStart/1000.f, 0, -1);
+
   drawBox();
+
   glutSwapBuffers();
 }
 
@@ -52,16 +71,14 @@ int oldTimeSinceStart = 0;
 
 void idle(void)
 {
-  int timeSinceStart = glutGet(GLUT_ELAPSED_TIME);
+  timeSinceStart = glutGet(GLUT_ELAPSED_TIME);
   int deltaTime = timeSinceStart - oldTimeSinceStart;
   oldTimeSinceStart = timeSinceStart;
 
   float deltaInSeconds = (float)deltaTime/1000.f;
   __updateFunc(deltaInSeconds);
 
-  // TODO: get this working so we can translate our cube.
-  glMatrixMode(GL_MODELVIEW);
-  glTranslatef((float)timeSinceStart*10.f, 0.0, -1.0);
+  glutPostRedisplay();
 }
 
 void
@@ -95,6 +112,7 @@ initRenderer(int argc, char **argv, int width, int height, void (*updateFunc)(fl
   glutReshapeWindow(width, height);
   float aspectRatio = (float)width / (float)height;
   glMatrixMode(GL_PROJECTION);
+  printf("aspect ratio: %.2f\n", aspectRatio);
   gluPerspective( /* field of view in degree */ 40.0,
     /* aspect ratio */ aspectRatio,
     /* Z near */ 1.0, /* Z far */ 40.0);
@@ -103,17 +121,8 @@ initRenderer(int argc, char **argv, int width, int height, void (*updateFunc)(fl
     0.0, 0.0, 0.0,      /* center is at (0,0,0) */
     0.0, 1.0, 0.);      /* up is in positive Y direction */
 
-  glTranslatef(0.0, 0.0, -1.0);
   glRotatef(90, 1.0, 0.0, 0.0);
+  glTranslatef(0.0, 0.0, -1.0);
 
   glutMainLoop();
 }
-
-// int
-// main()
-// {
-//   init(1000, 600);
-//   float r = (float)rand() / RAND_MAX;
-//   printf("r: %.2f\n", r);
-//   return 0;             /* ANSI C requires main to return int. */
-// }
