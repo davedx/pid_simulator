@@ -1,5 +1,8 @@
-sim: sim.o renderer.o util.o
-	clang -o sim sim.o renderer.o util.o -framework GLUT -framework OpenGL -framework Cocoa
+sim: sim.o renderer.o util.o controller.o
+	clang -o sim sim.o renderer.o util.o controller.o -framework GLUT -framework OpenGL -framework Cocoa
+
+controller.o: controller.c
+	clang -c controller.c
 
 renderer.o: renderer.c
 	clang -c renderer.c

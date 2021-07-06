@@ -24,6 +24,8 @@ GLfloat v[8][3];  /* Will be filled in with X,Y,Z vertexes. */
 
 void (*__updateFunc)(float);
 
+struct SimState* __simState = NULL;
+
 void
 drawBox(void)
 {
@@ -47,12 +49,6 @@ display(void)
 {
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-  glMatrixMode(GL_PROJECTION);
-  glLoadIdentity();
-  gluPerspective( /* field of view in degree */ 40.0,
-    /* aspect ratio */ 1.67f,
-    /* Z near */ 1.0, /* Z far */ 40.0);
-
   glMatrixMode(GL_MODELVIEW);
   glLoadIdentity();
   gluLookAt(0.0, 0.0, 30.0,
@@ -60,9 +56,19 @@ display(void)
     0.0, 1.0, 0.);
 
   glRotatef(90, 1.0, 0.0, 0.0);
-  glTranslatef((float)timeSinceStart/1000.f, 0, -1);
 
-  drawBox();
+  if (__simState) {
+    glPushMatrix();
+    glTranslatef(__simState->vehicle.position.x, -1, __simState->vehicle.position.y);
+    drawBox();
+    glPopMatrix();
+
+    glPushMatrix();
+    glScalef(0.5f, 0.5f, 0.5f);
+    glTranslatef(__simState->target.x, -1, __simState->target.y);
+    drawBox();
+    glPopMatrix();
+  }
 
   glutSwapBuffers();
 }
@@ -82,9 +88,11 @@ void idle(void)
 }
 
 void
-initRenderer(int argc, char **argv, int width, int height, void (*updateFunc)(float), struct SimState simState)
+initRenderer(int argc, char **argv, int width, int height, void (*updateFunc)(float), struct SimState *simState)
 {
   __updateFunc = updateFunc;
+  __simState = simState;
+
   glutInit(&argc, argv);
   glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
   glutCreateWindow("simulation renderer");
@@ -112,17 +120,9 @@ initRenderer(int argc, char **argv, int width, int height, void (*updateFunc)(fl
   glutReshapeWindow(width, height);
   float aspectRatio = (float)width / (float)height;
   glMatrixMode(GL_PROJECTION);
-  printf("aspect ratio: %.2f\n", aspectRatio);
-  gluPerspective( /* field of view in degree */ 40.0,
-    /* aspect ratio */ aspectRatio,
-    /* Z near */ 1.0, /* Z far */ 40.0);
-  glMatrixMode(GL_MODELVIEW);
-  gluLookAt(0.0, 0.0, 30.0,  /* eye is at (0,0,5) */
-    0.0, 0.0, 0.0,      /* center is at (0,0,0) */
-    0.0, 1.0, 0.);      /* up is in positive Y direction */
-
-  glRotatef(90, 1.0, 0.0, 0.0);
-  glTranslatef(0.0, 0.0, -1.0);
+  gluPerspective(40.0,
+    aspectRatio,
+    1.0, 40.0);
 
   glutMainLoop();
 }
