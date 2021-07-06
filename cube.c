@@ -21,6 +21,8 @@ GLint faces[6][4] = {  /* Vertex indices for the 6 faces of a cube. */
   {4, 5, 1, 0}, {5, 6, 2, 1}, {7, 4, 0, 3} };
 GLfloat v[8][3];  /* Will be filled in with X,Y,Z vertexes. */
 
+void (*__updateFunc)(float);
+
 void
 drawBox(void)
 {
@@ -46,10 +48,6 @@ display(void)
 }
 
 int oldTimeSinceStart = 0;
-int logTimer = 3000;
-
-void update(float dt) {
-}
 
 void idle(void)
 {
@@ -57,17 +55,14 @@ void idle(void)
   int deltaTime = timeSinceStart - oldTimeSinceStart;
   oldTimeSinceStart = timeSinceStart;
 
-  logTimer -= deltaTime;
-  if (logTimer < 0) {
-    logTimer = 3000;
-    printf("Log\n");
-    // do something
-  }
+  float deltaInSeconds = (float)deltaTime/1000.f;
+  __updateFunc(deltaInSeconds);
 }
 
 void
-initRenderer(int argc, char **argv, int width, int height)
+initRenderer(int argc, char **argv, int width, int height, void (*updateFunc)(float))
 {
+  __updateFunc = updateFunc;
   glutInit(&argc, argv);
   glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
   glutCreateWindow("simulation renderer");
