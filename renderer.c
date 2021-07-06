@@ -10,6 +10,7 @@
 #define GL_SILENCE_DEPRECATION
 #include <GLUT/glut.h>
 #include <stdio.h>
+#include "types.h"
 
 GLfloat light_diffuse[] = {1.0, 0.0, 0.0, 1.0};  /* Red diffuse light. */
 GLfloat light_position[] = {1.0, 1.0, 1.0, 0.0};  /* Infinite light location. */
@@ -57,10 +58,14 @@ void idle(void)
 
   float deltaInSeconds = (float)deltaTime/1000.f;
   __updateFunc(deltaInSeconds);
+
+  // TODO: get this working so we can translate our cube.
+  glMatrixMode(GL_MODELVIEW);
+  glTranslatef((float)timeSinceStart*10.f, 0.0, -1.0);
 }
 
 void
-initRenderer(int argc, char **argv, int width, int height, void (*updateFunc)(float))
+initRenderer(int argc, char **argv, int width, int height, void (*updateFunc)(float), struct SimState simState)
 {
   __updateFunc = updateFunc;
   glutInit(&argc, argv);
@@ -98,7 +103,6 @@ initRenderer(int argc, char **argv, int width, int height, void (*updateFunc)(fl
     0.0, 0.0, 0.0,      /* center is at (0,0,0) */
     0.0, 1.0, 0.);      /* up is in positive Y direction */
 
-  /* Adjust cube position to be asthetic angle. */
   glTranslatef(0.0, 0.0, -1.0);
   glRotatef(90, 1.0, 0.0, 0.0);
 

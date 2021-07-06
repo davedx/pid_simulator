@@ -1,3 +1,4 @@
+#pragma once
 
 struct Vec2 {
   float x;
@@ -15,5 +16,3 @@ struct SimState {
   struct Vec2 windSpeed;
   struct Vec2 target;
 };
-
-struct SimState simState;
