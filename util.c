@@ -2,6 +2,20 @@
 #include <time.h>
 #include <sys/time.h>
 
+float minf(float a, float b) {
+  return a < b ? a : b;
+}
+
+float maxf(float a, float b) {
+  return a > b ? a : b;
+}
+
+float clampf(float min, float a, float max) {
+  if (a < min) a = min;
+  if (a > max) a = max;
+  return a;
+}
+
 long generateRandomSeed() {
   struct timeval tv;
 

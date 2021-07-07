@@ -5,6 +5,8 @@ struct Vec2 {
   float y;
 };
 
+typedef struct Vec2 vec2;
+
 struct Vehicle {
   struct Vec2 position;
   struct Vec2 velocity;
