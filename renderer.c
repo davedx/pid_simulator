@@ -24,7 +24,7 @@ GLfloat v[8][3];  /* Will be filled in with X,Y,Z vertexes. */
 
 void (*__updateFunc)(float);
 
-struct SimState* __simState = NULL;
+SimState* __simState = NULL;
 
 void
 drawBox(void)
@@ -88,7 +88,7 @@ void idle(void)
 }
 
 void
-initRenderer(int argc, char **argv, int width, int height, void (*updateFunc)(float), struct SimState *simState)
+initRenderer(int argc, char **argv, int width, int height, void (*updateFunc)(float), SimState *simState)
 {
   __updateFunc = updateFunc;
   __simState = simState;

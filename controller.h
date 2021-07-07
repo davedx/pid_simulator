@@ -1,3 +1,3 @@
 #include "types.h"
 
-vec2 getAcceleration(struct SimState *simState);
+Vec2 getAcceleration(SimState *simState);

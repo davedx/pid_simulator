@@ -6,7 +6,7 @@
 #include "util.h"
 #include "types.h"
 
-struct SimState simState;
+SimState simState;
 
 const float TARGET_UPDATE_FREQUENCY = 2.f;
 const float MAX_VELOCITY = 2.f;
@@ -21,7 +21,7 @@ void update(float dt) {
     simState.target.y = (rand1() * 20.f) - 10.f;
     printf("Target at %.1f, %.1f\n", simState.target.x, simState.target.y);
   }
-  vec2 accel = getAcceleration(&simState);
+  Vec2 accel = getAcceleration(&simState);
   simState.vehicle.acceleration.x = accel.x;
   simState.vehicle.acceleration.y = accel.y;
 
