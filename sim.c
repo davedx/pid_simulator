@@ -8,12 +8,24 @@
 
 SimState simState;
 
-const float TARGET_UPDATE_FREQUENCY = 2.f;
+const float TARGET_UPDATE_FREQUENCY = 20.f;
+const float LOG_FREQUENCY = 1.f;
 const float MAX_VELOCITY = 2.f;
 
-float timer = TARGET_UPDATE_FREQUENCY;
+float timer = 0;
+float logTimer = LOG_FREQUENCY;
+
 void update(float dt) {
   timer -= dt;
+  logTimer -= dt;
+
+  if (logTimer < 0) {
+    logTimer = LOG_FREQUENCY;
+    printf("Vehicle accel %.2f,%.2f vel %.2f,%.2f pos %.2f,%.2f\n",
+      simState.vehicle.acceleration.x, simState.vehicle.acceleration.y,
+      simState.vehicle.velocity.x, simState.vehicle.velocity.y,
+      simState.vehicle.position.x, simState.vehicle.position.y);
+  }
 
   if (timer < 0) {
     timer = TARGET_UPDATE_FREQUENCY;
@@ -21,7 +33,7 @@ void update(float dt) {
     simState.target.y = (rand1() * 20.f) - 10.f;
     printf("Target at %.1f, %.1f\n", simState.target.x, simState.target.y);
   }
-  Vec2 accel = getAcceleration(&simState);
+  Vec2 accel = getAccelerationPropDeriv(&simState, dt);
   simState.vehicle.acceleration.x = accel.x;
   simState.vehicle.acceleration.y = accel.y;
 

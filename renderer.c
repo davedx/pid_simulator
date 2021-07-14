@@ -58,14 +58,25 @@ display(void)
   glRotatef(90, 1.0, 0.0, 0.0);
 
   if (__simState) {
+    // Render the vehicle
     glPushMatrix();
     glTranslatef(__simState->vehicle.position.x, -1, __simState->vehicle.position.y);
     drawBox();
     glPopMatrix();
 
+    // Render the target
     glPushMatrix();
     glScalef(0.5f, 0.5f, 0.5f);
     glTranslatef(__simState->target.x, -1, __simState->target.y);
+    drawBox();
+    glPopMatrix();
+
+    // Render the vehicle acceleration as a point (an arrow would be better)
+    glPushMatrix();
+    glScalef(0.2f, 0.2f, 0.2f);
+    float ax = __simState->vehicle.position.x + __simState->vehicle.acceleration.x;
+    float ay = __simState->vehicle.position.y + __simState->vehicle.acceleration.y;
+    glTranslatef(ax, -1, ay);
     drawBox();
     glPopMatrix();
   }
