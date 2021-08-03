@@ -51,7 +51,7 @@ display(void)
 
   glMatrixMode(GL_MODELVIEW);
   glLoadIdentity();
-  gluLookAt(0.0, 0.0, 30.0,
+  gluLookAt(0.0, 0.0, 100.0,
     0.0, 0.0, 0.0,
     0.0, 1.0, 0.);
 
@@ -66,17 +66,17 @@ display(void)
 
     // Render the target
     glPushMatrix();
-    glScalef(0.5f, 0.5f, 0.5f);
     glTranslatef(__simState->target.x, -1, __simState->target.y);
+    glScalef(0.5f, 0.5f, 0.5f);
     drawBox();
     glPopMatrix();
 
     // Render the vehicle acceleration as a point (an arrow would be better)
     glPushMatrix();
-    glScalef(0.2f, 0.2f, 0.2f);
     float ax = __simState->vehicle.position.x + __simState->vehicle.acceleration.x;
     float ay = __simState->vehicle.position.y + __simState->vehicle.acceleration.y;
     glTranslatef(ax, -1, ay);
+    glScalef(0.2f, 0.2f, 0.2f);
     drawBox();
     glPopMatrix();
   }
@@ -93,6 +93,9 @@ void idle(void)
   oldTimeSinceStart = timeSinceStart;
 
   float deltaInSeconds = (float)deltaTime/1000.f;
+  if (deltaInSeconds <= 0) {
+    deltaInSeconds = 0.0001f;
+  }
   __updateFunc(deltaInSeconds);
 
   glutPostRedisplay();
@@ -133,7 +136,7 @@ initRenderer(int argc, char **argv, int width, int height, void (*updateFunc)(fl
   glMatrixMode(GL_PROJECTION);
   gluPerspective(40.0,
     aspectRatio,
-    1.0, 40.0);
+    1.0, 200.0);
 
   glutMainLoop();
 }

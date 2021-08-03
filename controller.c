@@ -5,11 +5,11 @@
 
 // PID controller
 
-const float MIN_ACCELERATION = -2.f;
-const float MAX_ACCELERATION = 2.f;
+const float MIN_ACCELERATION = -5.f;
+const float MAX_ACCELERATION = 5.f;
 
-const float PROPORTION_CONSTANT = 0.5f;//.5f;
-const float DERIVATIVE_CONSTANT = 1.5f;//.5f;
+const float PROPORTION_CONSTANT = 10.f; //0.5f;//.5f;
+const float DERIVATIVE_CONSTANT = 5.f; // 1.5f;//.5f;
 
 /**
  * Naive controller. Jams the "stick" in whatever direction takes it towards
@@ -50,17 +50,17 @@ Vec2 getAccelerationPropDeriv(SimState *simState, float deltaTime) {
   float errX = simState->target.x - simState->vehicle.position.x;
   float errY = simState->target.y - simState->vehicle.position.y;
 
-  float derivX = (lastErrX - errX) * (DERIVATIVE_CONSTANT / deltaTime);
-  float derivY = (lastErrY - errY) * (DERIVATIVE_CONSTANT / deltaTime);
+  float derivX = (errX - lastErrX) * (DERIVATIVE_CONSTANT / deltaTime);
+  float derivY = (errY - lastErrY) * (DERIVATIVE_CONSTANT / deltaTime);
 
-  float propX = errX * (PROPORTION_CONSTANT / deltaTime);
-  float propY = errY * (PROPORTION_CONSTANT / deltaTime);
+  float propX = errX * PROPORTION_CONSTANT;
+  float propY = errY * PROPORTION_CONSTANT;
 
   lastErrX = errX;
   lastErrY = errY;
 
-  errX = errX + propX + derivX;
-  errY = errY + propY + derivY;
+  errX = propX + derivX;
+  errY = propY + derivY;
 
   Vec2 accel;
   accel.x = clampf(MIN_ACCELERATION, errX, MAX_ACCELERATION);
