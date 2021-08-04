@@ -8,9 +8,9 @@
 const float MIN_ACCELERATION = -5.f;
 const float MAX_ACCELERATION = 5.f;
 
-const float PROPORTION_CONSTANT = 3.f;
-const float INTEGRAL_CONSTANT = 5.f;
-const float DERIVATIVE_CONSTANT = 5.f;
+const float PROPORTION_CONSTANT = 2.f;
+const float INTEGRAL_CONSTANT = 8.f;
+const float DERIVATIVE_CONSTANT = 3.f;
 
 /**
  * Naive controller. Jams the "stick" in whatever direction takes it towards

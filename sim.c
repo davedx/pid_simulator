@@ -29,8 +29,8 @@ void update(float dt) {
 
   if (timer < 0) {
     timer = TARGET_UPDATE_FREQUENCY;
-    simState.target.x = (rand1() * 80.f) - 40.f;
-    simState.target.y = (rand1() * 80.f) - 40.f;
+    simState.target.x = (rand1() * 60.f) - 30.f;
+    simState.target.y = (rand1() * 60.f) - 30.f;
     printf("Target at %.1f, %.1f\n", simState.target.x, simState.target.y);
   }
   Vec2 accel = getAccelerationPropDeriv(&simState, dt);
