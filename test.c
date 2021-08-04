@@ -1,11 +1,7 @@
 #include <stdlib.h>
-
-#define tst_debugging printf
-
-#define true 1
-#define false 0
-
-#define c_assert(e) ((e) ? (true) : tst_debugging("%s, %d: assertion ’%s’ failed\n", __FILE__, __LINE__, #e), false)
+#include <stdio.h>
+#include "macros.h"
+#include "types.h"
 
 int ERROR = -1;
 
@@ -19,20 +15,28 @@ int add_positive (int a, int b) {
   return a + b;
 }
 
+// a kind of unit test suite for the assertion macros
 int main (void) {
   // should not assert
   int c = add_positive(3, 4);
   if (c == ERROR) {
-    printf("Returned ERROR, halting");
-    exit(1);
+    printf("3,4 Returned ERROR\n");
   }
 
   // should assert
   int d = add_positive(-1, 2);
   if (d == ERROR) {
-    printf("Returned ERROR, halting");
-    exit(1);
+    printf("-1,2 Returned ERROR\n");
   }
+
+  Vec2 ok_vec;
+  ok_vec.x = 0;
+  ok_vec.y = 0;
+  c_assert_vec2(ok_vec, -1, 1);
+
+  Vec2 out_of_range_vec;
+  out_of_range_vec.x = -100.f;
+  c_assert_vec2(out_of_range_vec, -1, 1);
 
   exit(0);
 }

@@ -1,4 +1,6 @@
 #include <unistd.h>
+#include <stdlib.h>
+#include <math.h>
 
 #include "macros.h"
 #include "renderer.h"
@@ -33,9 +35,18 @@ void update(float dt) {
     simState.target.y = (rand1() * 60.f) - 30.f;
     printf("Target at %.1f, %.1f\n", simState.target.x, simState.target.y);
   }
-  Vec2 accel = getAccelerationPropDeriv(&simState, dt);
-  simState.vehicle.acceleration.x = accel.x;
-  simState.vehicle.acceleration.y = accel.y;
+
+  Vec2 accel;
+  if (ERROR == getAccelerationPropIntegDeriv(&simState, dt, &accel)) {
+    exit(1);
+  } else {
+    simState.vehicle.acceleration.x = accel.x;
+    simState.vehicle.acceleration.y = accel.y;
+  }
+
+  if (!c_assert_vec2(simState.vehicle.acceleration, -100.f, 100.f)) {
+    exit(1);
+  }
 
   simState.vehicle.velocity.x = simState.vehicle.velocity.x + simState.vehicle.acceleration.x * dt;
   simState.vehicle.velocity.y = simState.vehicle.velocity.y + simState.vehicle.acceleration.y * dt;

@@ -1,3 +1,5 @@
+Source: http://web.eecs.umich.edu/~imarkov/10rules.pdf
+
 1. Restrict all code to very simple control flow constructs – do not use goto statements, setjmp or longjmp
 constructs, and direct or indirect recursion.
 

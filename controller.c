@@ -2,6 +2,8 @@
 
 #include "types.h"
 #include "util.h"
+#include "macros.h"
+#include "controller.h"
 
 // PID controller
 
@@ -9,7 +11,7 @@ const float MIN_ACCELERATION = -5.f;
 const float MAX_ACCELERATION = 5.f;
 
 const float PROPORTION_CONSTANT = 2.f;
-const float INTEGRAL_CONSTANT = 8.f;
+const float INTEGRAL_CONSTANT = 0.1f;
 const float DERIVATIVE_CONSTANT = 3.f;
 
 /**
@@ -69,10 +71,21 @@ Vec2 getAccelerationPropDeriv(SimState *simState, float deltaTime) {
 
 /**
  * Proportional integral derivative acceleration controller.
+ * Rewritten following JPL rule of 10.
  */
 float errSumX = 0;
 float errSumY = 0;
-Vec2 getAccelerationPropIntegDeriv(SimState *simState, float deltaTime) {
+int getAccelerationPropIntegDeriv(SimState *simState, float deltaTime, Vec2 *accel) {
+  if (!c_assert_float(deltaTime, 0, 1.f)) {
+    return ERROR;
+  }
+  if (!c_assert_vec2(simState->vehicle.position, -1000.f, 1000.f)) {
+    return ERROR;
+  }
+  if (!c_assert_vec2(simState->target, -1000.f, 1000.f)) {
+    return ERROR;
+  }
+
   float errX = simState->target.x - simState->vehicle.position.x;
   float errY = simState->target.y - simState->vehicle.position.y;
 
@@ -95,8 +108,7 @@ Vec2 getAccelerationPropIntegDeriv(SimState *simState, float deltaTime) {
   errX = propX + derivX + integX;
   errY = propY + derivY + integY;
 
-  Vec2 accel;
-  accel.x = clampf(MIN_ACCELERATION, errX, MAX_ACCELERATION);
-  accel.y = clampf(MIN_ACCELERATION, errY, MAX_ACCELERATION);
-  return accel;
+  accel->x = clampf(MIN_ACCELERATION, errX, MAX_ACCELERATION);
+  accel->y = clampf(MIN_ACCELERATION, errY, MAX_ACCELERATION);
+  return OK;
 }

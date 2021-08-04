@@ -93,6 +93,7 @@ void idle(void)
   oldTimeSinceStart = timeSinceStart;
 
   float deltaInSeconds = (float)deltaTime/1000.f;
+  // if we lose window context, we get 0 deltas which results in nans in our simulator
   if (deltaInSeconds <= 0) {
     deltaInSeconds = 0.0001f;
   }
