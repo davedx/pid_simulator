@@ -1,3 +1,3 @@
 #include "types.h"
 
-void initRenderer(int argc, char **argv, int width, int height, void (*updateFunc)(float), SimState *simState);
+void initRenderer(int argc, char **argv, void (*updateFunc)(float), SimState *simState);

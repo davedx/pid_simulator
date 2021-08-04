@@ -102,8 +102,11 @@ void idle(void)
 }
 
 void
-initRenderer(int argc, char **argv, int width, int height, void (*updateFunc)(float), SimState *simState)
+initRenderer(int argc, char **argv, void (*updateFunc)(float), SimState *simState)
 {
+  int width = 1200;
+  int height = 800;
+
   __updateFunc = updateFunc;
   __simState = simState;
 
